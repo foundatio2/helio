@@ -22,7 +22,7 @@
         .btn-glow:hover { box-shadow: 0 0 15px rgba(255, 214, 0, 0.7); }
         
         @media (max-width: 640px) {
-            .nft-grid-layout { grid-template-columns: repeat(2, 1fr); }
+            .nft-grid-layout { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -45,6 +45,7 @@
                 <div class="flex gap-4">
                     <img src="https://i.ibb.co.com/TMrzbHBT/1.png" class="w-24 h-24 rounded-2xl border-4 border-white shadow-lg">
                     <img src="https://i.ibb.co.com/WNGr3s9Y/2.png" class="w-24 h-24 rounded-2xl border-4 border-white shadow-lg">
+                    <img src="https://i.ibb.co.com/dJH8B9Lf/21.png" class="w-24 h-24 rounded-2xl border-4 border-white shadow-lg">
                 </div>
             </div>
 
@@ -54,7 +55,7 @@
                     <input type="text" id="input-twitter" placeholder="Twitter Username" class="w-full p-4 rounded-2xl border bg-white outline-none focus:border-yellow-400">
                     <input type="text" id="input-wallet" placeholder="ETH Wallet Address (0x...)" class="w-full p-4 rounded-2xl border bg-white outline-none focus:border-yellow-400">
                     <div class="bg-yellow-100 p-4 rounded-2xl text-center font-bold">
-                        CAPTCHA: <span id="captcha-code" class="tracking-widest">M8B2W</span>
+                        CAPTCHA: <span id="captcha-code" class="tracking-widest">MIMOCREW</span>
                         <input type="text" id="input-captcha" placeholder="Type the code" class="w-full mt-2 p-2 rounded-xl border-none text-center">
                     </div>
                     <button onclick="startTasks()" class="w-full bg-black text-white py-5 rounded-2xl font-bold btn-glow transition">Start Tasks</button>
@@ -64,7 +65,7 @@
                     <div id="s1" class="p-5 rounded-3xl border-2 border-yellow-400 bg-white">
                         <p class="font-bold text-xs mb-3 uppercase">Step 1: Follow Us</p>
                         <div class="flex gap-2">
-                            <a href="https://twitter.com/MimoCrew" target="_blank" onclick="done('s1a')" class="bg-black text-white text-xs px-4 py-3 rounded-xl font-bold">@MimoCrew</a>
+                            <a href="https://twitter.com/MimoCrewNFT" target="_blank" onclick="done('s1a')" class="bg-black text-white text-xs px-4 py-3 rounded-xl font-bold">@MimoCrew</a>
                             <a href="https://twitter.com/MimoCrewNFT" target="_blank" onclick="done('s1b')" class="bg-black text-white text-xs px-4 py-3 rounded-xl font-bold">@MimoCrewNFT</a>
                         </div>
                     </div>
@@ -89,7 +90,6 @@
 
     <section id="page2" class="hidden min-h-screen pt-28 pb-20 px-4">
         <div class="max-w-6xl mx-auto space-y-12">
-            
             <div class="glass p-8 rounded-[40px] flex flex-col md:flex-row items-center gap-8 border-b-8 border-yellow-400">
                 <img id="user-avatar" src="" class="w-32 h-32 rounded-full border-4 border-yellow-400 object-cover shadow-xl">
                 <div class="flex-grow space-y-2 text-center md:text-left">
@@ -104,10 +104,10 @@
 
             <div id="upgrade-box" class="glass p-10 rounded-[40px] border-2 border-dashed border-yellow-500">
                 <h3 class="text-3xl font-black mb-4">Want Guaranteed Access (GTD)?</h3>
-                <div class="grid md:grid-cols-2 gap-8">
+                <div id="upgrade-content" class="grid md:grid-cols-2 gap-8">
                     <div class="text-sm space-y-3 opacity-80">
                         <p>1. Make a post about Mimo Crew on Twitter.</p>
-                        <p>2. Tag @MimoCrew and show some love.</p>
+                        <p>2. Tag @MimoCrewNFT and show some love.</p>
                         <p>3. Paste the link below for us to check.</p>
                     </div>
                     <div id="upgrade-form">
@@ -116,6 +116,9 @@
                     </div>
                     <div id="review-status" class="hidden bg-yellow-400 p-6 rounded-2xl text-center font-black">
                         APPLICATION UNDER REVIEW
+                    </div>
+                    <div id="gtd-approved" class="hidden bg-green-500 text-white p-6 rounded-2xl text-center font-black">
+                        GTD APPROVED
                     </div>
                 </div>
             </div>
@@ -170,17 +173,17 @@
     </section>
 
     <script>
-        // ADD YOUR GOOGLE SCRIPT WEB APP URL HERE
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxGJAY-Y_4z4_9Y8DJR8BVBggAFp7UVVLUS1olZDL0fWmVBbvVH2U_XL9sg4RbyT7Rbpw/exec';
+        // GOOGLE SCRIPT URL ADDED HERE
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxN8BkonQvWjz874ILNEExwtA1lpJ36FJXLK3FzlYxhhWmafUgE5C92uTx_loNpZRmG/exec";
 
         const nftImages = [
             "https://i.ibb.co.com/TMrzbHBT/1.png", "https://i.ibb.co.com/WNGr3s9Y/2.png", "https://i.ibb.co.com/tpsKzQMd/3.png",
             "https://i.ibb.co.com/SjpMmV8/4.png", "https://i.ibb.co.com/b8wpmms/5.png", "https://i.ibb.co.com/prMPkNZv/6.png",
             "https://i.ibb.co.com/n8fLtt1y/7.png", "https://i.ibb.co.com/RkCTqdJR/8.png", "https://i.ibb.co.com/NgPPStBJ/9.png",
-            "https://i.ibb.co.com/YFTGvMSM/10.png", "https://i.ibb.co.com/3YdfcWqg/11.png", "https://i.ibb.co.com/dJH8B9Lf/21.png",
+            "https://i.ibb.co.com/YFTGvMSM/10.png", "https://i.ibb.co.com/3YdfcWqg/11.png", "https://i.ibb.co.com/HLN19pDW/12.png",
             "https://i.ibb.co.com/yBsBxCgx/13.png", "https://i.ibb.co.com/Rp08ZHVh/14.png", "https://i.ibb.co.com/Q7bxRyqX/15.png",
             "https://i.ibb.co.com/bgBWw9TB/16.png", "https://i.ibb.co.com/chSG083q/17.png", "https://i.ibb.co.com/8n72tjrK/18.png",
-            "https://i.ibb.co.com/JFKM1dXW/19.png", "https://i.ibb.co.com/spfxJZg3/20.png", 
+            "https://i.ibb.co.com/JFKM1dXW/19.png", "https://i.ibb.co.com/spfxJZg3/20.png", "https://i.ibb.co.com/dJH8B9Lf/21.png"
         ];
 
         let state = { s1a: false, s1b: false, s2a: false, s2b: false, s3: false };
@@ -208,25 +211,28 @@
         }
 
         async function submitRegistration() {
+            const btn = document.getElementById('final-btn');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
             const user = {
                 twitter: document.getElementById('input-twitter').value,
                 wallet: document.getElementById('input-wallet').value,
                 status: "Whitelist (FCFS)",
                 comment: document.getElementById('comment-link').value,
                 isReviewing: false,
+                isApproved: false,
                 avatar: nftImages[Math.floor(Math.random() * nftImages.length)]
             };
-            
-            localStorage.setItem('mimo_crew_user', JSON.stringify(user));
-            
-            // Sync to Google Sheets
-            if(scriptURL !== 'https://script.google.com/macros/s/AKfycbxGJAY-Y_4z4_9Y8DJR8BVBggAFp7UVVLUS1olZDL0fWmVBbvVH2U_XL9sg4RbyT7Rbpw/exec') {
-                try {
-                    await fetch(scriptURL, { method: 'POST', body: JSON.stringify(user) });
-                } catch (e) { console.log("Sync Error"); }
+
+            try {
+                await fetch(scriptURL, { method: 'POST', body: JSON.stringify(user), mode: 'no-cors' });
+                localStorage.setItem('mimo_crew_user', JSON.stringify(user));
+                location.reload();
+            } catch (e) {
+                localStorage.setItem('mimo_crew_user', JSON.stringify(user));
+                location.reload();
             }
-            
-            location.reload();
         }
 
         function loadUserData() {
@@ -242,7 +248,13 @@
                 document.getElementById('nav-status').innerText = data.status;
                 document.getElementById('user-avatar').src = data.avatar;
 
-                if(data.isReviewing) {
+                if(data.isApproved) {
+                    document.getElementById('upgrade-form').classList.add('hidden');
+                    document.getElementById('review-status').classList.add('hidden');
+                    document.getElementById('gtd-approved').classList.remove('hidden');
+                    document.getElementById('user-status').innerText = "GTD APPROVED";
+                    document.getElementById('nav-status').innerText = "GTD APPROVED";
+                } else if(data.isReviewing) {
                     document.getElementById('upgrade-form').classList.add('hidden');
                     document.getElementById('review-status').classList.remove('hidden');
                 }
@@ -253,8 +265,12 @@
             let data = JSON.parse(localStorage.getItem('mimo_crew_user'));
             data.twitter = document.getElementById('edit-name').value;
             data.wallet = document.getElementById('edit-wallet').value;
+            // Admin manual override logic
+            if(data.status.includes("GTD")) {
+                data.isApproved = true;
+            }
             localStorage.setItem('mimo_crew_user', JSON.stringify(data));
-            alert("Updated!");
+            location.reload();
         }
 
         async function submitUpgrade() {
@@ -263,15 +279,9 @@
             let data = JSON.parse(localStorage.getItem('mimo_crew_user'));
             data.isReviewing = true;
             data.upgrade_link = link;
-            localStorage.setItem('mimo_crew_user', JSON.stringify(data));
             
-            // Sync Upgrade to Sheet
-            if(scriptURL !== 'https://script.google.com/macros/s/AKfycbxGJAY-Y_4z4_9Y8DJR8BVBggAFp7UVVLUS1olZDL0fWmVBbvVH2U_XL9sg4RbyT7Rbpw/exec') {
-                try {
-                    await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) });
-                } catch (e) { console.log("Sync Error"); }
-            }
-
+            await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data), mode: 'no-cors' });
+            localStorage.setItem('mimo_crew_user', JSON.stringify(data));
             location.reload();
         }
 
