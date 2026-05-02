@@ -12,14 +12,12 @@
         body { font-family: 'Outfit', sans-serif; background-color: var(--bg); color: #1a1a1a; }
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); }
         
-        /* 3-Column Grid for Gallery */
         .nft-grid-layout {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
         }
         .nft-card { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 15px; }
-        
         .step-locked { opacity: 0.5; pointer-events: none; filter: grayscale(1); }
         .btn-glow:hover { box-shadow: 0 0 15px rgba(255, 214, 0, 0.7); }
         
@@ -42,8 +40,8 @@
     <section id="page1" class="min-h-screen pt-24 pb-10 px-4">
         <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div class="space-y-6">
-                <h1 class="text-6xl lg:text-8xl font-black tracking-tighter leading-tight">Mimo Crew <br><span class="text-yellow-500">is here.</span></h1>
-                <p class="text-lg opacity-70">Just 676 unique characters. No junk, just good art and a solid crew.</p>
+                <h1 class="text-6xl lg:text-8xl font-black tracking-tighter leading-tight">Mimo Crew <br><span class="text-yellow-500">is live.</span></h1>
+                <p class="text-lg opacity-70">A limited collection of 676 hand-drawn Mimos. Join the whitelist to secure your spot in the future of the crew.</p>
                 <div class="flex gap-4">
                     <img src="https://i.ibb.co.com/TMrzbHBT/1.png" class="w-24 h-24 rounded-2xl border-4 border-white shadow-lg">
                     <img src="https://i.ibb.co.com/WNGr3s9Y/2.png" class="w-24 h-24 rounded-2xl border-4 border-white shadow-lg">
@@ -73,13 +71,13 @@
                     <div id="s2" class="p-5 rounded-3xl border bg-white step-locked">
                         <p class="font-bold text-xs mb-3 uppercase">Step 2: Like & Repost</p>
                         <div class="flex gap-2">
-                            <a href="LINK_HERE" target="_blank" onclick="done('s2a')" class="border border-black text-xs px-4 py-3 rounded-xl font-bold">Like Tweet</a>
-                            <a href="LINK_HERE" target="_blank" onclick="done('s2b')" class="border border-black text-xs px-4 py-3 rounded-xl font-bold">Repost Tweet</a>
+                            <a href="#" target="_blank" onclick="done('s2a')" class="border border-black text-xs px-4 py-3 rounded-xl font-bold">Like Tweet</a>
+                            <a href="#" target="_blank" onclick="done('s2b')" class="border border-black text-xs px-4 py-3 rounded-xl font-bold">Repost Tweet</a>
                         </div>
                     </div>
                     <div id="s3" class="p-5 rounded-3xl border bg-white step-locked">
                         <p class="font-bold text-xs mb-3 uppercase">Step 3: Comment & Submit</p>
-                        <a href="LINK_HERE" target="_blank" class="block bg-blue-50 text-blue-600 text-xs p-3 rounded-xl font-bold mb-3 text-center border border-blue-100">Click to Comment</a>
+                        <a href="#" target="_blank" class="block bg-blue-50 text-blue-600 text-xs p-3 rounded-xl font-bold mb-3 text-center border border-blue-100">Click to Comment</a>
                         <input type="text" id="comment-link" placeholder="Paste your comment link here" class="w-full p-4 text-xs border rounded-xl outline-none focus:border-yellow-400 mb-3">
                         <button onclick="done('s3')" class="w-full bg-yellow-400 py-4 rounded-xl font-black text-xs uppercase">Verify Link</button>
                     </div>
@@ -158,7 +156,7 @@
             </div>
 
             <div class="space-y-6">
-                <h3 class="text-3xl font-black text-center">The Crew Gallery</h3>
+                <h3 class="text-3xl font-black text-center">The Mimo Crew Gallery</h3>
                 <div id="nft-grid" class="nft-grid-layout"></div>
             </div>
 
@@ -172,13 +170,16 @@
     </section>
 
     <script>
+        // ADD YOUR GOOGLE SCRIPT WEB APP URL HERE
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxGJAY-Y_4z4_9Y8DJR8BVBggAFp7UVVLUS1olZDL0fWmVBbvVH2U_XL9sg4RbyT7Rbpw/exec';
+
         const nftImages = [
             "https://i.ibb.co.com/TMrzbHBT/1.png", "https://i.ibb.co.com/WNGr3s9Y/2.png", "https://i.ibb.co.com/tpsKzQMd/3.png",
             "https://i.ibb.co.com/SjpMmV8/4.png", "https://i.ibb.co.com/b8wpmms/5.png", "https://i.ibb.co.com/prMPkNZv/6.png",
             "https://i.ibb.co.com/n8fLtt1y/7.png", "https://i.ibb.co.com/RkCTqdJR/8.png", "https://i.ibb.co.com/NgPPStBJ/9.png",
-            "https://i.ibb.co.com/YFTGvMSM/10.png", "https://i.ibb.co.com/3YdfcWqg/11.png", "https://i.ibb.co.com/HLN19pDW/12.png",
+            "https://i.ibb.co.com/YFTGvMSM/10.png", "https://i.ibb.co.com/3YdfcWqg/11.png", "https://i.ibb.co.com/dJH8B9Lf/21.png",
             "https://i.ibb.co.com/yBsBxCgx/13.png", "https://i.ibb.co.com/Rp08ZHVh/14.png", "https://i.ibb.co.com/Q7bxRyqX/15.png",
-            "https://i.ibb.co.com/bgBWw9TB/16.png", "https://i.ibb.co.com/chSG083q/17.png", "https://i.ibb.co.com/dJH8B9Lf/21.png",
+            "https://i.ibb.co.com/bgBWw9TB/16.png", "https://i.ibb.co.com/chSG083q/17.png", "https://i.ibb.co.com/8n72tjrK/18.png",
             "https://i.ibb.co.com/JFKM1dXW/19.png", "https://i.ibb.co.com/spfxJZg3/20.png", 
         ];
 
@@ -206,7 +207,7 @@
             if(count === 5 && document.getElementById('comment-link').value !== "") document.getElementById('final-btn').classList.remove('hidden');
         }
 
-        function submitRegistration() {
+        async function submitRegistration() {
             const user = {
                 twitter: document.getElementById('input-twitter').value,
                 wallet: document.getElementById('input-wallet').value,
@@ -215,7 +216,16 @@
                 isReviewing: false,
                 avatar: nftImages[Math.floor(Math.random() * nftImages.length)]
             };
+            
             localStorage.setItem('mimo_crew_user', JSON.stringify(user));
+            
+            // Sync to Google Sheets
+            if(scriptURL !== 'https://script.google.com/macros/s/AKfycbxGJAY-Y_4z4_9Y8DJR8BVBggAFp7UVVLUS1olZDL0fWmVBbvVH2U_XL9sg4RbyT7Rbpw/exec') {
+                try {
+                    await fetch(scriptURL, { method: 'POST', body: JSON.stringify(user) });
+                } catch (e) { console.log("Sync Error"); }
+            }
+            
             location.reload();
         }
 
@@ -247,11 +257,21 @@
             alert("Updated!");
         }
 
-        function submitUpgrade() {
-            if(!document.getElementById('upgrade-link').value) return alert("Link missing");
+        async function submitUpgrade() {
+            const link = document.getElementById('upgrade-link').value;
+            if(!link) return alert("Link missing");
             let data = JSON.parse(localStorage.getItem('mimo_crew_user'));
             data.isReviewing = true;
+            data.upgrade_link = link;
             localStorage.setItem('mimo_crew_user', JSON.stringify(data));
+            
+            // Sync Upgrade to Sheet
+            if(scriptURL !== 'https://script.google.com/macros/s/AKfycbxGJAY-Y_4z4_9Y8DJR8BVBggAFp7UVVLUS1olZDL0fWmVBbvVH2U_XL9sg4RbyT7Rbpw/exec') {
+                try {
+                    await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) });
+                } catch (e) { console.log("Sync Error"); }
+            }
+
             location.reload();
         }
 
