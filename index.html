@@ -188,7 +188,7 @@
     </section>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxN8BkonQvWjz874ILNEExwtA1lpJ36FJXLK3FzlYxhhWmafUgE5C92uTx_loNpZRmG/exec";
+        const scriptURL = "https://script.google.com/macros/s/AKfycbyOMl95mSHCSNvVeDguXe-0kIuYwIZDXwnEm_ICrclOZEu9-9uNlFC8do8ngcIpfSHl/exec";
 
         const nftData = [
             { src: "https://i.ibb.co.com/JW2KgbT3/12.png", num: "572" },
@@ -244,6 +244,7 @@
             btn.disabled = true;
 
             const user = {
+                action: "register",
                 twitter: document.getElementById('input-twitter').value,
                 wallet: document.getElementById('input-wallet').value,
                 status: "Whitelist (FCFS)",
@@ -263,29 +264,53 @@
             }
         }
 
-        function loadUserData() {
+        async function loadUserData() {
             const saved = localStorage.getItem('mimo_crew_user');
             if(saved) {
-                const data = JSON.parse(saved);
-                document.getElementById('page1').classList.add('hidden');
-                document.getElementById('page2').classList.remove('hidden');
-                document.getElementById('user-status-tag').classList.remove('hidden');
-                document.getElementById('edit-name').value = data.twitter;
-                document.getElementById('edit-wallet').value = data.wallet;
-                document.getElementById('user-status').innerText = data.status;
-                document.getElementById('nav-status').innerText = data.status;
-                document.getElementById('user-avatar').src = data.avatar;
+                let data = JSON.parse(saved);
+                
+                // Show UI immediately from LocalStorage
+                renderUI(data);
 
-                if(data.isApproved) {
-                    document.getElementById('upgrade-form').classList.add('hidden');
-                    document.getElementById('review-status').classList.add('hidden');
-                    document.getElementById('gtd-approved').classList.remove('hidden');
-                    document.getElementById('user-status').innerText = "GTD APPROVED";
-                    document.getElementById('nav-status').innerText = "GTD APPROVED";
-                } else if(data.isReviewing) {
-                    document.getElementById('upgrade-form').classList.add('hidden');
-                    document.getElementById('review-status').classList.remove('hidden');
-                }
+                // Fetch fresh data from Google Sheet to check for approval
+                try {
+                    const response = await fetch(`${scriptURL}?wallet=${data.wallet}`);
+                    const freshData = await response.json();
+                    if (freshData && freshData.status) {
+                        data.status = freshData.status;
+                        data.isApproved = (freshData.status === "GTD APPROVED");
+                        data.isReviewing = (freshData.status === "APPLICATION UNDER REVIEW");
+                        localStorage.setItem('mimo_crew_user', JSON.stringify(data));
+                        renderUI(data);
+                    }
+                } catch (e) { console.log("Sync error"); }
+            }
+        }
+
+        function renderUI(data) {
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
+            document.getElementById('user-status-tag').classList.remove('hidden');
+            document.getElementById('edit-name').value = data.twitter;
+            document.getElementById('edit-wallet').value = data.wallet;
+            document.getElementById('user-status').innerText = data.status;
+            document.getElementById('nav-status').innerText = data.status;
+            document.getElementById('user-avatar').src = data.avatar;
+
+            if(data.isApproved || data.status === "GTD APPROVED") {
+                document.getElementById('upgrade-form').classList.add('hidden');
+                document.getElementById('review-status').classList.add('hidden');
+                document.getElementById('gtd-approved').classList.remove('hidden');
+                document.getElementById('user-status').innerText = "GTD APPROVED";
+                document.getElementById('nav-status').innerText = "GTD APPROVED";
+            } else if(data.isReviewing || data.status === "APPLICATION UNDER REVIEW") {
+                document.getElementById('upgrade-form').classList.add('hidden');
+                document.getElementById('review-status').classList.remove('hidden');
+                document.getElementById('gtd-approved').classList.add('hidden');
+            } else {
+                document.getElementById('upgrade-form').classList.remove('hidden');
+                document.getElementById('review-status').classList.add('hidden');
+                document.getElementById('gtd-approved').classList.add('hidden');
             }
         }
 
@@ -293,9 +318,6 @@
             let data = JSON.parse(localStorage.getItem('mimo_crew_user'));
             data.twitter = document.getElementById('edit-name').value;
             data.wallet = document.getElementById('edit-wallet').value;
-            if(data.status.includes("GTD")) {
-                data.isApproved = true;
-            }
             localStorage.setItem('mimo_crew_user', JSON.stringify(data));
             location.reload();
         }
@@ -304,12 +326,19 @@
             const link = document.getElementById('upgrade-link').value;
             if(!link) return alert("Link missing");
             let data = JSON.parse(localStorage.getItem('mimo_crew_user'));
+            data.action = "upgrade";
             data.isReviewing = true;
             data.upgrade_link = link;
+            data.status = "APPLICATION UNDER REVIEW";
             
-            await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data), mode: 'no-cors' });
-            localStorage.setItem('mimo_crew_user', JSON.stringify(data));
-            location.reload();
+            try {
+                await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data), mode: 'no-cors' });
+                localStorage.setItem('mimo_crew_user', JSON.stringify(data));
+                location.reload();
+            } catch (e) {
+                localStorage.setItem('mimo_crew_user', JSON.stringify(data));
+                location.reload();
+            }
         }
 
         function initGallery() {
