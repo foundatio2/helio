@@ -17,7 +17,20 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
         }
+        .nft-container { position: relative; width: 100%; }
         .nft-card { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 15px; }
+        .nft-number { 
+            margin-top: 5px; 
+            font-size: 10px; 
+            font-weight: 800; 
+            background: #000; 
+            color: #FFD600; 
+            display: inline-block; 
+            padding: 2px 8px; 
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+        
         .step-locked { opacity: 0.5; pointer-events: none; filter: grayscale(1); }
         .btn-glow:hover { box-shadow: 0 0 15px rgba(255, 214, 0, 0.7); }
         
@@ -68,7 +81,7 @@
                         <p class="font-bold text-xs mb-3 uppercase">Step 1: Follow Us</p>
                         <div class="flex gap-2">
                             <a href="https://x.com/intent/follow?screen_name=MimoCrewNFT" target="_blank" onclick="done('s1a')" class="bg-black text-white text-xs px-4 py-3 rounded-xl font-bold">@MimoCrewNFT</a>
-                            <a href="https://x.com/intent/follow?screen_name=MimoCrewNFT" target="_blank" onclick="done('s1b')" class="bg-black text-white text-xs px-4 py-3 rounded-xl font-bold">@BUILDER</a>
+                            <a href="https://x.com/intent/follow?screen_name=alexmoou" target="_blank" onclick="done('s1b')" class="bg-black text-white text-xs px-4 py-3 rounded-xl font-bold">@BUILDER</a>
                         </div>
                     </div>
                     <div id="s2" class="p-5 rounded-3xl border bg-white step-locked">
@@ -175,7 +188,6 @@
     </section>
 
     <script>
-        // GOOGLE SCRIPT URL ADDED HERE
         const scriptURL = "https://script.google.com/macros/s/AKfycbxN8BkonQvWjz874ILNEExwtA1lpJ36FJXLK3FzlYxhhWmafUgE5C92uTx_loNpZRmG/exec";
 
         const nftImages = [
@@ -267,7 +279,6 @@
             let data = JSON.parse(localStorage.getItem('mimo_crew_user'));
             data.twitter = document.getElementById('edit-name').value;
             data.wallet = document.getElementById('edit-wallet').value;
-            // Admin manual override logic
             if(data.status.includes("GTD")) {
                 data.isApproved = true;
             }
@@ -289,8 +300,13 @@
 
         function initGallery() {
             const grid = document.getElementById('nft-grid');
-            nftImages.forEach(src => {
-                grid.innerHTML += `<img src="${src}" class="nft-card">`;
+            nftImages.forEach((src, index) => {
+              let randomNum = Math.floor(100 + Math.random() * 676); 
+                grid.innerHTML += `
+                    <div class="nft-container text-center">
+                        <img src="${src}" class="nft-card">
+                        <div class="nft-number">#${randomNum}</div>
+                    </div>`;
             });
         }
 
