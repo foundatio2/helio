@@ -190,14 +190,28 @@
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbxN8BkonQvWjz874ILNEExwtA1lpJ36FJXLK3FzlYxhhWmafUgE5C92uTx_loNpZRmG/exec";
 
-        const nftImages = [
-            "https://i.ibb.co.com/JW2KgbT3/12.png", "https://i.ibb.co.com/M5SPZ8Jc/17.png", "https://i.ibb.co.com/fYx02hjn/8.png",
-            "https://i.ibb.co.com/WpNKs95W/3.png", "https://i.ibb.co.com/b8wpmms/5.png", "https://i.ibb.co.com/35JKwSFx/11.png",
-            "https://i.ibb.co.com/n8fLtt1y/7.png", "https://i.ibb.co.com/RkCTqdJR/8.png", "https://i.ibb.co.com/NgPPStBJ/9.png",
-            "https://i.ibb.co.com/YFTGvMSM/10.png", "https://i.ibb.co.com/3YdfcWqg/11.png", "https://i.ibb.co.com/HLN19pDW/12.png",
-            "https://i.ibb.co.com/yBsBxCgx/13.png", "https://i.ibb.co.com/Rp08ZHVh/14.png", "https://i.ibb.co.com/Q7bxRyqX/15.png",
-            "https://i.ibb.co.com/bgBWw9TB/16.png", "https://i.ibb.co.com/chSG083q/17.png", "https://i.ibb.co.com/8n72tjrK/18.png",
-            "https://i.ibb.co.com/JFKM1dXW/19.png", "https://i.ibb.co.com/spfxJZg3/20.png", "https://i.ibb.co.com/dJH8B9Lf/21.png"
+        const nftData = [
+            { src: "https://i.ibb.co.com/JW2KgbT3/12.png", num: "572" },
+            { src: "https://i.ibb.co.com/M5SPZ8Jc/17.png", num: "241" },
+            { src: "https://i.ibb.co.com/fYx02hjn/8.png", num: "59" },
+            { src: "https://i.ibb.co.com/WpNKs95W/3.png", num: "354" },
+            { src: "https://i.ibb.co.com/b8wpmms/5.png", num: "05" },
+            { src: "https://i.ibb.co.com/35JKwSFx/11.png", num: "354" },
+            { src: "https://i.ibb.co.com/n8fLtt1y/7.png", num: "25" },
+            { src: "https://i.ibb.co.com/RkCTqdJR/8.png", num: "67" },
+            { src: "https://i.ibb.co.com/NgPPStBJ/9.png", num: "128" },
+            { src: "https://i.ibb.co.com/YFTGvMSM/10.png", num: "111" },
+            { src: "https://i.ibb.co.com/3YdfcWqg/11.png", num: "32" },
+            { src: "https://i.ibb.co.com/HLN19pDW/12.png", num: "45" },
+            { src: "https://i.ibb.co.com/yBsBxCgx/13.png", num: "195" },
+            { src: "https://i.ibb.co.com/Rp08ZHVh/14.png", num: "144" },
+            { src: "https://i.ibb.co.com/Q7bxRyqX/15.png", num: "515" },
+            { src: "https://i.ibb.co.com/bgBWw9TB/16.png", num: "16" },
+            { src: "https://i.ibb.co.com/chSG083q/17.png", num: "55" },
+            { src: "https://i.ibb.co.com/8n72tjrK/18.png", num: "642" },
+            { src: "https://i.ibb.co.com/JFKM1dXW/19.png", num: "125" },
+            { src: "https://i.ibb.co.com/spfxJZg3/20.png", num: "254" },
+            { src: "https://i.ibb.co.com/dJH8B9Lf/21.png", num: "174" }
         ];
 
         let state = { s1a: false, s1b: false, s2a: false, s2b: false, s3: false };
@@ -236,7 +250,7 @@
                 comment: document.getElementById('comment-link').value,
                 isReviewing: false,
                 isApproved: false,
-                avatar: nftImages[Math.floor(Math.random() * nftImages.length)]
+                avatar: nftData[Math.floor(Math.random() * nftData.length)].src
             };
 
             try {
@@ -300,12 +314,11 @@
 
         function initGallery() {
             const grid = document.getElementById('nft-grid');
-            nftImages.forEach((src, index) => {
-              let randomNum = Math.floor(100 + Math.random() * 676); 
+            nftData.forEach(item => {
                 grid.innerHTML += `
                     <div class="nft-container text-center">
-                        <img src="${src}" class="nft-card">
-                        <div class="nft-number">#${randomNum}</div>
+                        <img src="${item.src}" class="nft-card">
+                        <div class="nft-number">#${item.num}</div>
                     </div>`;
             });
         }
