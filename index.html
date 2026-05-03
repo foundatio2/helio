@@ -188,7 +188,7 @@
     </section>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxgDZ4mde1PW1YgorMpE-edzzXxPw4bzAvPxcyq9J_7VQyfsh-CzQ9hJogbT-oVYsY/exec";
+        const scriptURL = "https://script.google.com/macros/s/AKfycbw2FcZzd9zR4ncw4-hIs0CxQSXE6gA5tlT0OIFZ7jG6O8tjA1NKP4cx-tQT-R7Iz6JW/exec";
 
         const nftData = [
             { src: "https://i.ibb.co.com/JW2KgbT3/12.png", num: "572" },
@@ -269,19 +269,23 @@
             if(saved) {
                 let data = JSON.parse(saved);
                 
-                // Show UI immediately from LocalStorage
+                // Show cached UI first
                 renderUI(data);
 
-                // Fetch fresh data from Google Sheet to check for approval
+                // FORCE UPDATE FROM SERVER IMMEDIATELY
                 try {
                     const response = await fetch(`${scriptURL}?wallet=${data.wallet}`);
                     const freshData = await response.json();
+                    
                     if (freshData && freshData.status) {
-                        data.status = freshData.status;
-                        data.isApproved = (freshData.status === "GTD APPROVED");
-                        data.isReviewing = (freshData.status === "APPLICATION UNDER REVIEW");
-                        localStorage.setItem('mimo_crew_user', JSON.stringify(data));
-                        renderUI(data);
+                        // Check if server status is different from local status
+                        if (data.status !== freshData.status) {
+                            data.status = freshData.status;
+                            data.isApproved = (freshData.status === "GTD APPROVED");
+                            data.isReviewing = (freshData.status === "APPLICATION UNDER REVIEW");
+                            localStorage.setItem('mimo_crew_user', JSON.stringify(data));
+                            renderUI(data); // Re-render with new data
+                        }
                     }
                 } catch (e) { console.log("Sync error"); }
             }
@@ -297,13 +301,12 @@
             document.getElementById('nav-status').innerText = data.status;
             document.getElementById('user-avatar').src = data.avatar;
 
-            if(data.isApproved || data.status === "GTD APPROVED") {
+            // Updated Logic for Approval visibility
+            if(data.status === "GTD APPROVED") {
                 document.getElementById('upgrade-form').classList.add('hidden');
                 document.getElementById('review-status').classList.add('hidden');
                 document.getElementById('gtd-approved').classList.remove('hidden');
-                document.getElementById('user-status').innerText = "GTD APPROVED";
-                document.getElementById('nav-status').innerText = "GTD APPROVED";
-            } else if(data.isReviewing || data.status === "APPLICATION UNDER REVIEW") {
+            } else if(data.status === "APPLICATION UNDER REVIEW") {
                 document.getElementById('upgrade-form').classList.add('hidden');
                 document.getElementById('review-status').classList.remove('hidden');
                 document.getElementById('gtd-approved').classList.add('hidden');
