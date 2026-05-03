@@ -26,8 +26,7 @@
             background: #000; 
             color: #FFD600; 
             display: inline-block; 
-            padding: 2px 8px; 
-            border-radius: 6px;
+            padding: 2px 8px; border-radius: 6px;
             text-transform: uppercase;
         }
         
@@ -109,7 +108,7 @@
                 <img id="user-avatar" src="" class="w-32 h-32 rounded-full border-4 border-yellow-400 object-cover shadow-xl">
                 <div class="flex-grow space-y-2 text-center md:text-left">
                     <input type="text" id="edit-name" class="bg-transparent text-4xl font-black border-none outline-none text-yellow-600 w-full text-center md:text-left">
-                    <input type="text" id="edit-wallet" class="bg-transparent text-sm opacity-50 font-mono w-full outline-none text-center md:text-left">
+                    <input type="text" id="edit-wallet" class="bg-transparent text-sm opacity-50 font-mono w-full outline-none text-center md:text-left" readonly>
                     <div class="pt-4 flex gap-4 justify-center md:justify-start">
                         <div class="bg-yellow-400 px-6 py-2 rounded-full font-black text-xs uppercase tracking-widest">Status: <span id="user-status"></span></div>
                         <button onclick="saveEdit()" class="text-xs font-bold underline">Update Profile</button>
@@ -127,7 +126,7 @@
                     </div>
                     <div id="upgrade-form">
                         <input type="text" id="upgrade-link" placeholder="Post link here" class="w-full p-4 rounded-2xl border bg-white mb-4">
-                        <button onclick="submitUpgrade()" class="w-full bg-black text-white py-4 rounded-2xl font-bold">Request GTD</button>
+                        <button onclick="submitUpgrade()" id="upgrade-btn" class="w-full bg-black text-white py-4 rounded-2xl font-bold">Request GTD</button>
                     </div>
                     <div id="review-status" class="hidden bg-yellow-400 p-6 rounded-2xl text-center font-black">
                         APPLICATION UNDER REVIEW
@@ -188,7 +187,9 @@
     </section>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbw2FcZzd9zR4ncw4-hIs0CxQSXE6gA5tlT0OIFZ7jG6O8tjA1NKP4cx-tQT-R7Iz6JW/exec";
+        // Replace with your Web App URLs
+        const regScriptURL = "https://script.google.com/macros/s/AKfycbyhsk3tK9dYlgsxNIxcWMYiXVUUFhibpChDRAYwkoNWlFyZKekD89S1ycv054L8cA/exec"; 
+        const gtdScriptURL = "https://script.google.com/macros/s/AKfycbwyaXMWIr8zgsKso13JljmgpSvS3JQWFnCDtsa70D2rulafZt-houYab-03eFn9XYuz/exec";
 
         const nftData = [
             { src: "https://i.ibb.co.com/JW2KgbT3/12.png", num: "572" },
@@ -246,18 +247,16 @@
             const user = {
                 action: "register",
                 twitter: document.getElementById('input-twitter').value,
-                wallet: document.getElementById('input-wallet').value,
+                wallet: document.getElementById('input-wallet').value.toLowerCase(),
                 status: "Whitelist (FCFS)",
                 comment: document.getElementById('comment-link').value,
-                isReviewing: false,
-                isApproved: false,
                 avatar: nftData[Math.floor(Math.random() * nftData.length)].src
             };
 
             try {
-                await fetch(scriptURL, { method: 'POST', body: JSON.stringify(user), mode: 'no-cors' });
+                await fetch(regScriptURL, { method: 'POST', body: JSON.stringify(user), mode: 'no-cors' });
                 localStorage.setItem('mimo_crew_user', JSON.stringify(user));
-                location.reload();
+                setTimeout(() => location.reload(), 1500);
             } catch (e) {
                 localStorage.setItem('mimo_crew_user', JSON.stringify(user));
                 location.reload();
@@ -268,24 +267,17 @@
             const saved = localStorage.getItem('mimo_crew_user');
             if(saved) {
                 let data = JSON.parse(saved);
-                
-                // Show cached UI first
-                renderUI(data);
+                renderUI(data); // Show cached UI first
 
-                // FORCE UPDATE FROM SERVER IMMEDIATELY
+                // Core Fix: Fetch fresh status from GTD Script
                 try {
-                    const response = await fetch(`${scriptURL}?wallet=${data.wallet}`);
+                    const response = await fetch(`${gtdScriptURL}?wallet=${data.wallet.toLowerCase()}`);
                     const freshData = await response.json();
                     
-                    if (freshData && freshData.status) {
-                        // Check if server status is different from local status
-                        if (data.status !== freshData.status) {
-                            data.status = freshData.status;
-                            data.isApproved = (freshData.status === "GTD APPROVED");
-                            data.isReviewing = (freshData.status === "APPLICATION UNDER REVIEW");
-                            localStorage.setItem('mimo_crew_user', JSON.stringify(data));
-                            renderUI(data); // Re-render with new data
-                        }
+                    if (freshData && freshData.status !== "Not Found") {
+                        data.status = freshData.status;
+                        localStorage.setItem('mimo_crew_user', JSON.stringify(data));
+                        renderUI(data); // Update UI with fresh status
                     }
                 } catch (e) { console.log("Sync error"); }
             }
@@ -297,16 +289,17 @@
             document.getElementById('user-status-tag').classList.remove('hidden');
             document.getElementById('edit-name').value = data.twitter;
             document.getElementById('edit-wallet').value = data.wallet;
-            document.getElementById('user-status').innerText = data.status;
-            document.getElementById('nav-status').innerText = data.status;
             document.getElementById('user-avatar').src = data.avatar;
+            
+            const statusText = data.status || "Whitelist (FCFS)";
+            document.getElementById('user-status').innerText = statusText;
+            document.getElementById('nav-status').innerText = statusText;
 
-            // Updated Logic for Approval visibility
-            if(data.status === "GTD APPROVED") {
+            if(statusText === "GTD APPROVED") {
                 document.getElementById('upgrade-form').classList.add('hidden');
                 document.getElementById('review-status').classList.add('hidden');
                 document.getElementById('gtd-approved').classList.remove('hidden');
-            } else if(data.status === "APPLICATION UNDER REVIEW") {
+            } else if(statusText === "APPLICATION UNDER REVIEW") {
                 document.getElementById('upgrade-form').classList.add('hidden');
                 document.getElementById('review-status').classList.remove('hidden');
                 document.getElementById('gtd-approved').classList.add('hidden');
@@ -317,35 +310,38 @@
             }
         }
 
-        function saveEdit() {
-            let data = JSON.parse(localStorage.getItem('mimo_crew_user'));
-            data.twitter = document.getElementById('edit-name').value;
-            data.wallet = document.getElementById('edit-wallet').value;
-            localStorage.setItem('mimo_crew_user', JSON.stringify(data));
-            location.reload();
-        }
-
         async function submitUpgrade() {
             const link = document.getElementById('upgrade-link').value;
             if(!link) return alert("Link missing");
+            
+            const btn = document.getElementById('upgrade-btn');
+            btn.innerText = "Sending...";
+            btn.disabled = true;
+
             let data = JSON.parse(localStorage.getItem('mimo_crew_user'));
-            data.action = "upgrade";
-            data.isReviewing = true;
             data.upgrade_link = link;
             data.status = "APPLICATION UNDER REVIEW";
             
             try {
-                await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data), mode: 'no-cors' });
+                await fetch(gtdScriptURL, { method: 'POST', body: JSON.stringify(data), mode: 'no-cors' });
                 localStorage.setItem('mimo_crew_user', JSON.stringify(data));
-                location.reload();
+                setTimeout(() => location.reload(), 1500);
             } catch (e) {
                 localStorage.setItem('mimo_crew_user', JSON.stringify(data));
                 location.reload();
             }
         }
 
+        function saveEdit() {
+            let data = JSON.parse(localStorage.getItem('mimo_crew_user'));
+            data.twitter = document.getElementById('edit-name').value;
+            localStorage.setItem('mimo_crew_user', JSON.stringify(data));
+            alert("Profile updated locally!");
+        }
+
         function initGallery() {
             const grid = document.getElementById('nft-grid');
+            grid.innerHTML = '';
             nftData.forEach(item => {
                 grid.innerHTML += `
                     <div class="nft-container text-center">
@@ -360,6 +356,10 @@
             setInterval(() => {
                 const now = new Date().getTime();
                 const diff = target - now;
+                if(diff < 0) {
+                    document.getElementById('timer').innerText = "MINT IS LIVE";
+                    return;
+                }
                 const d = Math.floor(diff / (1000 * 60 * 60 * 24));
                 const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
