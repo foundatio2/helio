@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mimo Crew NFTs Simple. Clean. Limited.</title>
+    <title>Mimo Crew NFTs | Official Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
         :root { --primary: #FFD600; --bg: #FFFDF0; }
-        body { font-family: 'Outfit', sans-serif; background-color: var(--bg); color: #1a1a1a; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg); color: #1a1a1a; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); }
         
         .nft-grid-layout {
@@ -17,7 +17,6 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
         }
-        .nft-container { position: relative; width: 100%; }
         .nft-card { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 15px; }
         .nft-number { 
             margin-top: 5px; 
@@ -30,15 +29,14 @@
             text-transform: uppercase;
         }
         
-        .step-locked { opacity: 0.5; pointer-events: none; filter: grayscale(1); }
-        .btn-glow:hover { box-shadow: 0 0 15px rgba(255, 214, 0, 0.7); }
-        
-        /* New Styles for Multi-Stage Timer */
         .stage-active { border: 2px solid #FFD600; background: rgba(255, 214, 0, 0.1); }
         .stage-passed { opacity: 0.4; text-decoration: line-through; }
+        .blur-text { filter: blur(4px); user-select: none; }
 
         @media (max-width: 640px) {
             .nft-grid-layout { grid-template-columns: repeat(3, 1fr); }
+            h1 { font-size: 3rem !important; }
+            .roadmap-grid { grid-template-columns: 1fr !important; }
         }
     </style>
 </head>
@@ -46,107 +44,41 @@
 
     <nav class="fixed top-0 w-full z-50 p-4">
         <div class="max-w-6xl mx-auto glass rounded-2xl px-6 py-3 flex justify-between items-center shadow-sm">
-            <div class="font-extrabold text-2xl tracking-tighter uppercase">MiMO CREW</div>
-            <div id="user-status-tag" class="hidden bg-yellow-400 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
-                Status: <span id="nav-status">Checking...</span>
+            <div class="font-extrabold text-xl md:text-2xl tracking-tighter uppercase">MiMO CREW</div>
+            <div id="user-status-tag" class="bg-yellow-400 px-4 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest">
+                Status: <span id="nav-status">Whitelist (FCFS)</span>
             </div>
         </div>
     </nav>
 
-    <section id="page1" class="min-h-screen pt-24 pb-10 px-4">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div class="space-y-6">
-                <h1 class="text-6xl lg:text-8xl font-black tracking-tighter leading-tight">Mimo Crew <br><span class="text-yellow-500">is live.</span></h1>
-                <p class="text-lg opacity-70">A limited collection of 676 hand drawn Mimos. Join the whitelist to secure your spot in the future of the crew.</p>
-                <div class="flex gap-4">
-                    <img src="https://i.ibb.co.com/WpNKs95W/3.png" class="w-24 h-24 rounded-2xl border-4 border-white shadow-lg">
-                    <img src="https://i.ibb.co.com/35JKwSFx/11.png" class="w-24 h-24 rounded-2xl border-4 border-white shadow-lg">
-                    <img src="https://i.ibb.co.com/fYx02hjn/8.png" class="w-24 h-24 rounded-2xl border-4 border-white shadow-lg">
-                    <img src="https://i.ibb.co.com/M5SPZ8Jc/17.png" class="w-24 h-24 rounded-2xl border-4 border-white shadow-lg">
-                    <img src="https://i.ibb.co.com/JW2KgbT3/12.png" class="w-24 h-24 rounded-2xl border-4 border-white shadow-lg">
-                </div>
-            </div>
-
-            <div id="reg-box" class="glass p-8 rounded-[40px] border-2 border-yellow-400 shadow-2xl">
-                <div id="wl-active-content">
-                    <h2 class="text-2xl font-black mb-6">Join the Whitelist</h2>
-                    <div id="pre-tasks" class="space-y-4">
-                        <input type="text" id="input-twitter" placeholder="Twitter Username" class="w-full p-4 rounded-2xl border bg-white outline-none focus:border-yellow-400">
-                        <input type="text" id="input-wallet" placeholder="ETH Wallet Address (0x...)" class="w-full p-4 rounded-2xl border bg-white outline-none focus:border-yellow-400">
-                        <div class="bg-yellow-100 p-4 rounded-2xl text-center font-bold">
-                            CAPTCHA: <span id="captcha-code" class="tracking-widest">MIMOCREW</span>
-                            <input type="text" id="input-captcha" placeholder="Type the code" class="w-full mt-2 p-2 rounded-xl border-none text-center">
-                        </div>
-                        <button onclick="startTasks()" class="w-full bg-black text-white py-5 rounded-2xl font-bold btn-glow transition">Start Tasks</button>
-                    </div>
-
-                    <div id="task-list" class="hidden space-y-4">
-                        <div id="s1" class="p-5 rounded-3xl border-2 border-yellow-400 bg-white">
-                            <p class="font-bold text-xs mb-3 uppercase">Step 1: Follow Us</p>
-                            <div class="flex gap-2">
-                                <a href="https://x.com/intent/follow?screen_name=MimoCrewNFT" target="_blank" onclick="done('s1a')" class="bg-black text-white text-xs px-4 py-3 rounded-xl font-bold">@MimoCrewNFT</a>
-                                <a href="https://x.com/intent/follow?screen_name=alexmoou" target="_blank" onclick="done('s1b')" class="bg-black text-white text-xs px-4 py-3 rounded-xl font-bold">@BUILDER</a>
-                            </div>
-                        </div>
-                        <div id="s2" class="p-5 rounded-3xl border bg-white step-locked">
-                            <p class="font-bold text-xs mb-3 uppercase">Step 2: Like & Repost</p>
-                            <div class="flex gap-2">
-                                <a href="https://x.com/intent/like?tweet_id=2051245738592723157" target="_blank" onclick="done('s2a')" class="border border-black text-xs px-4 py-3 rounded-xl font-bold">Like Tweet</a>
-                                <a href="https://x.com/intent/retweet?tweet_id=2051245738592723157" target="_blank" onclick="done('s2b')" class="border border-black text-xs px-4 py-3 rounded-xl font-bold">Repost Tweet</a>
-                            </div>
-                        </div>
-                        <div id="s3" class="p-5 rounded-3xl border bg-white step-locked">
-                            <p class="font-bold text-xs mb-3 uppercase">Step 3: Comment & Submit</p>
-                            <a href="https://x.com/intent/tweet?in_reply_to=2051245738592723157&text=%40friend1%20%40friend2%20%40friend3%20%0AYourWalletAddress" target="_blank" class="block bg-blue-50 text-blue-600 text-xs p-3 rounded-xl font-bold mb-3 text-center border border-blue-100">Click to Comment</a>
-                            <input type="text" id="comment-link" placeholder="Paste your comment link here" class="w-full p-4 text-xs border rounded-xl outline-none focus:border-yellow-400 mb-3">
-                            <button onclick="done('s3')" class="w-full bg-yellow-400 py-4 rounded-xl font-black text-xs uppercase">Verify Link</button>
-                        </div>
-                        <button id="final-btn" onclick="submitRegistration()" class="hidden w-full bg-black text-white py-5 rounded-2xl font-bold btn-glow">Finish Registration</button>
-                    </div>
-                </div>
-
-                <div id="wl-ended-content" class="hidden text-center py-10 space-y-6">
-                    <div class="inline-block p-4 bg-red-100 text-red-600 rounded-full">
-                        <i data-lucide="clock-off" class="w-12 h-12"></i>
-                    </div>
-                    <h2 class="text-4xl font-black uppercase tracking-tighter">WL Application Ended</h2>
-                    <p class="font-bold opacity-60">The deadline for Whitelist registration has passed (May 6, 23:59 UTC). Stay tuned for the Mint event!</p>
-                    <button onclick="location.reload()" class="bg-black text-white px-8 py-3 rounded-2xl font-bold">Refresh Page</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="page2" class="hidden min-h-screen pt-28 pb-20 px-4">
+    <section id="page2" class="min-h-screen pt-28 pb-20 px-4">
         <div class="max-w-6xl mx-auto space-y-12">
             <div class="glass p-8 rounded-[40px] flex flex-col md:flex-row items-center gap-8 border-b-8 border-yellow-400">
-                <img id="user-avatar" src="" class="w-32 h-32 rounded-full border-4 border-yellow-400 object-cover shadow-xl">
+                <img id="user-avatar" src="https://i.ibb.co.com/b8wpmms/5.png" class="w-32 h-32 rounded-full border-4 border-yellow-400 object-cover shadow-xl">
                 <div class="flex-grow space-y-2 text-center md:text-left">
-                    <input type="text" id="edit-name" class="bg-transparent text-4xl font-black border-none outline-none text-yellow-600 w-full text-center md:text-left">
-                    <input type="text" id="edit-wallet" class="bg-transparent text-sm opacity-50 font-mono w-full outline-none text-center md:text-left" readonly>
-                    <div class="pt-4 flex gap-4 justify-center md:justify-start">
-                        <div class="bg-yellow-400 px-6 py-2 rounded-full font-black text-xs uppercase tracking-widest">Status: <span id="user-status"></span></div>
-                        <button onclick="saveEdit()" class="text-xs font-bold underline">Update Profile</button>
+                    <div id="display-name" class="text-3xl md:text-4xl font-black text-yellow-600 truncate">Mimo Member</div>
+                    <div id="display-wallet" class="text-xs md:text-sm opacity-50 font-mono truncate">0x00...0000</div>
+                    <div class="pt-4 flex flex-wrap gap-4 justify-center md:justify-start">
+                        <div class="bg-yellow-400 px-6 py-2 rounded-full font-black text-[10px] md:text-xs uppercase tracking-widest">
+                            Status: <span id="user-status">Whitelist (FCFS)</span>
+                        </div>
+                        <button onclick="document.getElementById('roadmap-section').scrollIntoView({behavior: 'smooth'})" class="bg-black text-white px-6 py-2 rounded-full font-black text-[10px] md:text-xs uppercase tracking-widest hover:bg-yellow-500 transition-colors">
+                            Check Future GTD Eligibility
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div id="upgrade-box" class="glass p-10 rounded-[40px] border-2 border-dashed border-yellow-500">
-                <h3 class="text-3xl font-black mb-4">Want Guaranteed Access (GTD)?</h3>
-                <div id="upgrade-content" class="grid md:grid-cols-2 gap-8">
-                    <div class="text-sm space-y-3 opacity-80">
-                        <p>1. Make a post about Mimo Crew on Twitter.</p>
-                        <p>2. Tag @MimoCrewNFT and show some love.</p>
-                        <p>3. Paste the link below for us to check.</p>
-                    </div>
-                    <div id="upgrade-form">
-                        <input type="text" id="upgrade-link" placeholder="Post link here" class="w-full p-4 rounded-2xl border bg-white mb-4">
-                        <button onclick="submitUpgrade()" id="upgrade-btn" class="w-full bg-black text-white py-4 rounded-2xl font-bold">Request GTD</button>
-                    </div>
-                    <div id="review-status" class="hidden bg-yellow-400 p-6 rounded-2xl text-center font-black">
-                        APPLICATION UNDER REVIEW
-                    </div>
-                    <div id="gtd-approved" class="hidden bg-green-500 text-white p-6 rounded-2xl text-center font-black">
+            <div id="status-message-box" class="hidden glass p-8 rounded-[40px] border-2 border-yellow-400 text-center">
+                <div id="review-msg-content" class="hidden">
+                    <h3 class="text-2xl font-black mb-2 uppercase">Your Wallet has been Recorded!</h3>
+                    <p class="text-sm md:text-base font-semibold opacity-80 leading-relaxed">
+                        To all our valued members who applied for GTD: we have successfully recorded your wallet addresses in our database. While this round has concluded, you are now officially waitlisted for GTD spots in our **Upcoming Projects**. We truly value your support and want to ensure no one feels left behind. Stay with the crew for your guaranteed future rewards!
+                    </p>
+                    <div class="mt-4 inline-block bg-yellow-100 text-yellow-800 px-4 py-1 rounded-full text-xs font-bold uppercase">Reserved for Future GTD</div>
+                </div>
+                <div id="gtd-approved-content" class="hidden">
+                    <div class="bg-green-500 text-white p-6 rounded-2xl text-center font-black text-2xl">
                         GTD APPROVED
                     </div>
                 </div>
@@ -154,103 +86,126 @@
 
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="glass p-10 rounded-[40px]">
-                    <h3 class="text-3xl font-black mb-4">Mint Details</h3>
+                    <h3 class="text-3xl font-black mb-4 uppercase">Mint Details</h3>
                     <div class="space-y-4 text-sm font-bold">
                         <div class="flex justify-between border-b pb-2"><span>Total Supply</span><span>676</span></div>
                         <div class="flex justify-between border-b pb-2"><span>GTD Price</span><span class="text-green-600">Free</span></div>
                         <div class="flex justify-between border-b pb-2"><span>WL/Public Price</span><span>0.001 ETH</span></div>
                         <div class="flex justify-between border-b pb-2"><span>Launch Date</span><span>May 7, 2026</span></div>
                     </div>
-                    <a href="https://opensea.io/collection/mimocrew/overview" target="_blank" class="block w-full bg-black text-white text-center py-5 rounded-2xl font-black mt-8">OPENSEA MINT PAGE</a>
+                    <a href="https://opensea.io/collection/mimocrew/overview" target="_blank" class="block w-full bg-black text-white text-center py-5 rounded-2xl font-black mt-8 hover:bg-yellow-500 transition-colors">OPENSEA MINT PAGE</a>
                 </div>
                 
                 <div class="glass p-8 rounded-[40px] flex flex-col">
                     <div class="text-center mb-6">
                         <span id="current-stage-label" class="text-xs font-black uppercase bg-black text-yellow-400 px-4 py-1 rounded-full tracking-widest">Next Phase Countdown</span>
-                        <div id="timer" class="text-4xl md:text-5xl font-black tracking-widest text-yellow-500 mt-4">00d 00h 00m 00s</div>
+                        <div id="timer" class="text-3xl md:text-5xl font-black tracking-widest text-yellow-500 mt-4">00d 00h 00m 00s</div>
                     </div>
                     
                     <div class="space-y-3">
-                        <div id="stage-gtd" class="p-4 rounded-2xl flex justify-between items-center bg-white/50 border border-transparent transition-all">
-                            <div>
-                                <p class="text-xs font-bold opacity-50 uppercase">Stage 01</p>
-                                <p class="font-black">GTD MINT 13:00 UTC</p>
-                            </div>
+                        <div id="stage-gtd" class="p-4 rounded-2xl flex justify-between items-center bg-white/50 border border-transparent">
+                            <div><p class="text-[10px] font-bold opacity-50 uppercase">Stage 01</p><p class="text-sm md:text-base font-black">GTD MINT — 13:00 UTC</p></div>
                             <button onclick="addToCalendar('Mimo Crew GTD Mint', '20260507T130000Z')" class="p-2 bg-black text-white rounded-lg"><i data-lucide="calendar-plus" class="w-4 h-4"></i></button>
                         </div>
-                        <div id="stage-fcfs" class="p-4 rounded-2xl flex justify-between items-center bg-white/50 border border-transparent transition-all">
-                            <div>
-                                <p class="text-xs font-bold opacity-50 uppercase">Stage 02</p>
-                                <p class="font-black">FCFS MINT 13:30 UTC</p>
-                            </div>
+                        <div id="stage-fcfs" class="p-4 rounded-2xl flex justify-between items-center bg-white/50 border border-transparent">
+                            <div><p class="text-[10px] font-bold opacity-50 uppercase">Stage 02</p><p class="text-sm md:text-base font-black">FCFS MINT — 13:30 UTC</p></div>
                             <button onclick="addToCalendar('Mimo Crew FCFS Mint', '20260507T133000Z')" class="p-2 bg-black text-white rounded-lg"><i data-lucide="calendar-plus" class="w-4 h-4"></i></button>
                         </div>
-                        <div id="stage-public" class="p-4 rounded-2xl flex justify-between items-center bg-white/50 border border-transparent transition-all">
-                            <div>
-                                <p class="text-xs font-bold opacity-50 uppercase">Stage 03</p>
-                                <p class="font-black">PUBLIC MINT 14:00 UTC</p>
-                            </div>
+                        <div id="stage-public" class="p-4 rounded-2xl flex justify-between items-center bg-white/50 border border-transparent">
+                            <div><p class="text-[10px] font-bold opacity-50 uppercase">Stage 03</p><p class="text-sm md:text-base font-black">PUBLIC MINT — 14:00 UTC</p></div>
                             <button onclick="addToCalendar('Mimo Crew Public Mint', '20260507T140000Z')" class="p-2 bg-black text-white rounded-lg"><i data-lucide="calendar-plus" class="w-4 h-4"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="glass p-10 rounded-[40px] border-2 border-yellow-400">
-    <h3 class="text-4xl font-black mb-12 text-center tracking-tighter uppercase">Project Roadmap</h3>
-    <div class="grid md:grid-cols-3 gap-8 relative">
-        
-        <div class="relative p-8 rounded-3xl bg-white/50 border border-yellow-200">
-            <div class="absolute -top-4 left-6 bg-black text-yellow-400 px-4 py-1 rounded-full text-xs font-black uppercase">Phase 01</div>
-            <h4 class="text-2xl font-black mb-4 uppercase">Inception</h4>
-            <ul class="text-sm space-y-3 opacity-80 font-semibold">
-                <li class="flex items-start gap-2"><span>•</span> Finalizing 676 hand drawn Mimo artworks.</li>
-                <li class="flex items-start gap-2"><span>•</span> Community building and social presence setup.</li>
-                <li class="flex items-start gap-2"><span>•</span> Smart contract development and security testing.</li>
-            </ul>
-        </div>
+            <div id="roadmap-section" class="glass p-6 md:p-10 rounded-[40px] border-2 border-yellow-400">
+                <h3 class="text-3xl md:text-4xl font-black mb-12 text-center tracking-tighter uppercase">Project Roadmap</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 roadmap-grid">
+                    
+                    <div class="relative p-6 rounded-3xl bg-white/50 border border-yellow-200">
+                        <div class="absolute -top-4 left-6 bg-black text-yellow-400 px-4 py-1 rounded-full text-[10px] font-black uppercase">Phase 01</div>
+                        <h4 class="text-xl font-black mb-4 uppercase">Inception</h4>
+                        <ul class="text-xs space-y-3 opacity-80 font-semibold">
+                            <li class="flex items-start gap-2"><span>•</span> Finalizing 676 hand drawn Mimo artworks.</li>
+                            <li class="flex items-start gap-2"><span>•</span> Community building and social presence setup.</li>
+                            <li class="flex items-start gap-2"><span>•</span> Smart contract development and security testing.</li>
+                        </ul>
+                    </div>
 
-        <div class="relative p-8 rounded-3xl bg-white/50 border border-yellow-200">
-            <div class="absolute -top-4 left-6 bg-black text-yellow-400 px-4 py-1 rounded-full text-xs font-black uppercase">Phase 02</div>
-            <h4 class="text-2xl font-black mb-4 uppercase">The Launch</h4>
-            <ul class="text-sm space-y-3 opacity-80 font-semibold">
-                <li class="flex items-start gap-2"><span>•</span> Whitelist (WL) and GTD registration opening.</li>
-                <li class="flex items-start gap-2"><span>•</span> Official Mint Event: May 7th, 2026.</li>
-                <li class="flex items-start gap-2"><span>•</span> Rarity reveal on OpenSea and secondary markets.</li>
-            </ul>
-        </div>
+                    <div class="relative p-6 rounded-3xl bg-white/50 border border-yellow-200">
+                        <div class="absolute -top-4 left-6 bg-black text-yellow-400 px-4 py-1 rounded-full text-[10px] font-black uppercase">Phase 02</div>
+                        <h4 class="text-xl font-black mb-4 uppercase">The Launch</h4>
+                        <ul class="text-xs space-y-3 opacity-80 font-semibold">
+                            <li class="flex items-start gap-2"><span>•</span> Whitelist (WL) and GTD registration opening.</li>
+                            <li class="flex items-start gap-2"><span>•</span> Official Mint Event: May 7th, 2026.</li>
+                            <li class="flex items-start gap-2"><span>•</span> Rarity reveal on OpenSea and secondary markets.</li>
+                        </ul>
+                    </div>
 
-        <div class="relative p-8 rounded-3xl bg-white/50 border border-yellow-200">
-            <div class="absolute -top-4 left-6 bg-black text-yellow-400 px-4 py-1 rounded-full text-xs font-black uppercase">Phase 03</div>
-            <h4 class="text-2xl font-black mb-4 uppercase">Ecosystem</h4>
-            <ul class="text-sm space-y-3 opacity-80 font-semibold">
-                <li class="flex items-start gap-2"><span>•</span> Exclusive perks for Mimo Crew holders.</li>
-                <li class="flex items-start gap-2"><span>•</span> Partnership announcements within the Web3 space.</li>
-                <li class="flex items-start gap-2"><span>•</span> Future expansion of the Mimo Verse.</li>
-            </ul>
-        </div>
+                    <div class="relative p-6 rounded-3xl bg-white/50 border border-yellow-200">
+                        <div class="absolute -top-4 left-6 bg-black text-yellow-400 px-4 py-1 rounded-full text-[10px] font-black uppercase">Phase 03</div>
+                        <h4 class="text-xl font-black mb-4 uppercase">Ecosystem</h4>
+                        <ul class="text-xs space-y-3 opacity-80 font-semibold">
+                            <li class="flex items-start gap-2"><span>•</span> Exclusive perks for Mimo Crew holders.</li>
+                            <li class="flex items-start gap-2"><span>•</span> Partnership announcements within the Web3 space.</li>
+                            <li class="flex items-start gap-2"><span>•</span> Future expansion of the Mimo Verse.</li>
+                        </ul>
+                    </div>
 
-    </div>
-</div>
+                    <div class="relative p-6 rounded-3xl bg-yellow-400/20 border-2 border-yellow-400">
+                        <div class="absolute -top-4 left-6 bg-black text-yellow-400 px-4 py-1 rounded-full text-[10px] font-black uppercase">Phase 04</div>
+                        <h4 class="text-xl font-black mb-4 uppercase">Upcoming NFT Collections</h4>
+                        <ul class="text-xs space-y-3 opacity-90 font-bold">
+                            <li class="flex items-start gap-2 text-yellow-700"><span>★</span> Upcoming: Mimo Crew Punks & FIFA Mimo Crew.</li>
+                            <li class="flex items-start gap-2"><span>★</span> Holders of <span class="blur-text">3</span> Mimo Crew NFTs will receive GTD for all future collections.</li>
+                            <li class="flex items-start gap-2"><span>★</span> Recorded applicants will be prioritized in Phase 04.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <h3 class="text-3xl font-black text-center uppercase tracking-tighter">Upcoming NFT Collections Preview</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="glass p-6 rounded-[30px] border-2 border-black">
+                        <p class="text-center font-black mb-4 uppercase">Mimo Crew Punks</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <img src="https://i.ibb.co.com/21HSb4b1/Mimopunk2.png" class="rounded-xl border border-black shadow-sm">
+                            <img src="https://i.ibb.co.com/S4M7kBwg/Mimopunks.png" class="rounded-xl border border-black shadow-sm">
+                            <img src="https://i.ibb.co.com/fVb4dPz7/Mimopunks3.png" class="rounded-xl border border-black shadow-sm">
+                        </div>
+                    </div>
+                    <div class="glass p-6 rounded-[30px] border-2 border-green-600">
+                        <p class="text-center font-black mb-4 uppercase">Fifa Mimo Crew</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <img src="https://i.ibb.co.com/wFJwzM0r/Mimocrewfifac.png" class="rounded-xl border border-green-200">
+                            <img src="https://i.ibb.co.com/d0Gz9dmX/Mimofifam.png" class="rounded-xl border border-green-200">
+                            <img src="https://i.ibb.co.com/rfKt6wPb/Mimofifan.png" class="rounded-xl border border-green-200">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="space-y-6">
-                <h3 class="text-3xl font-black text-center">The Mimo Crew Gallery</h3>
+                <h3 class="text-3xl font-black text-center uppercase">The Mimo Crew Gallery</h3>
                 <div id="nft-grid" class="nft-grid-layout"></div>
             </div>
 
-            <div class="text-center pt-10 border-t">
-                <p class="font-bold text-xs opacity-50 uppercase mb-4">Follow the crew for updates</p>
-                <div class="flex justify-center gap-4">
-                    <a href="https://twitter.com/MimoCrewNFT" target="_blank" class="bg-black text-white px-8 py-3 rounded-full font-bold">Follow @MimoCrewNFT</a>
+            <div class="text-center pt-10 border-t space-y-6">
+                <div class="flex flex-wrap justify-center gap-6 text-xs font-black uppercase tracking-widest opacity-70">
+                    <a href="https://opensea.io/collection/mimocrew" target="_blank" class="hover:text-yellow-600">OpenSea Marketplace</a>
+                    <a href="https://etherscan.io/address/0x151e5ffbdfa0824108c253c1dace1fef7ec9fa03" target="_blank" class="hover:text-yellow-600">View on Etherscan</a>
                 </div>
+                <div class="flex justify-center gap-4">
+                    <a href="https://twitter.com/MimoCrewNFT" target="_blank" class="bg-black text-white px-8 py-3 rounded-full font-bold hover:bg-yellow-500 transition-colors">Follow @MimoCrewNFT</a>
+                </div>
+                <p class="text-[10px] font-bold opacity-30">© 2026 MIMO CREW. ALL RIGHTS RESERVED.</p>
             </div>
         </div>
     </section>
 
     <script>
-        const regScriptURL = "https://script.google.com/macros/s/AKfycbyhsk3tK9dYlgsxNIxcWMYiXVUUFhibpChDRAYwkoNWlFyZKekD89S1ycv054L8cA/exec"; 
-        const gtdScriptURL = "https://script.google.com/macros/s/AKfycbwyaXMWIr8zgsKso13JljmgpSvS3JQWFnCDtsa70D2rulafZt-houYab-03eFn9XYuz/exec";
-
         const nftData = [
             { src: "https://i.ibb.co.com/JW2KgbT3/12.png", num: "572" }, { src: "https://i.ibb.co.com/M5SPZ8Jc/17.png", num: "241" },
             { src: "https://i.ibb.co.com/fYx02hjn/8.png", num: "59" }, { src: "https://i.ibb.co.com/WpNKs95W/3.png", num: "354" },
@@ -265,125 +220,37 @@
             { src: "https://i.ibb.co.com/dJH8B9Lf/21.png", num: "174" }
         ];
 
-        let state = { s1a: false, s1b: false, s2a: false, s2b: false, s3: false };
-
         window.onload = () => {
-            checkWLDeadline();
             initGallery();
             loadUserData();
             startMultiStageTimer();
             lucide.createIcons();
         };
 
-        function checkWLDeadline() {
-            const deadline = new Date("May 6, 2026 23:59:00 UTC").getTime();
-            const now = new Date().getTime();
-            if (now > deadline) {
-                document.getElementById('wl-active-content').classList.add('hidden');
-                document.getElementById('wl-ended-content').classList.remove('hidden');
-            }
-        }
-
-        function startTasks() {
-            if(!document.getElementById('input-twitter').value || !document.getElementById('input-wallet').value) return alert("Please fill details");
-            if(document.getElementById('input-captcha').value.toUpperCase() !== "MIMOCREW") return alert("Wrong Captcha");
-            document.getElementById('pre-tasks').classList.add('hidden');
-            document.getElementById('task-list').classList.remove('hidden');
-        }
-
-        function done(step) {
-            state[step] = true;
-            if(state.s1a && state.s1b) document.getElementById('s2').classList.remove('step-locked');
-            if(state.s2a && state.s2b) document.getElementById('s3').classList.remove('step-locked');
-            let count = Object.values(state).filter(Boolean).length;
-            if(count === 5 && document.getElementById('comment-link').value !== "") document.getElementById('final-btn').classList.remove('hidden');
-        }
-
-        async function submitRegistration() {
-            const btn = document.getElementById('final-btn');
-            btn.innerText = "Processing...";
-            btn.disabled = true;
-            const user = {
-                action: "register",
-                twitter: document.getElementById('input-twitter').value,
-                wallet: document.getElementById('input-wallet').value.toLowerCase(),
-                status: "Whitelist (FCFS)",
-                comment: document.getElementById('comment-link').value,
-                avatar: nftData[Math.floor(Math.random() * nftData.length)].src
-            };
-            try {
-                await fetch(regScriptURL, { method: 'POST', body: JSON.stringify(user), mode: 'no-cors' });
-                localStorage.setItem('mimo_crew_user', JSON.stringify(user));
-                setTimeout(() => location.reload(), 1500);
-            } catch (e) {
-                localStorage.setItem('mimo_crew_user', JSON.stringify(user));
-                location.reload();
-            }
-        }
-
-        async function loadUserData() {
+        function loadUserData() {
             const saved = localStorage.getItem('mimo_crew_user');
             if(saved) {
                 let data = JSON.parse(saved);
-                renderUI(data);
-                try {
-                    const response = await fetch(`${gtdScriptURL}?wallet=${data.wallet.toLowerCase()}`);
-                    const freshData = await response.json();
-                    if (freshData && freshData.status !== "Not Found") {
-                        data.status = freshData.status;
-                        localStorage.setItem('mimo_crew_user', JSON.stringify(data));
-                        renderUI(data);
-                    }
-                } catch (e) { console.log("Sync error"); }
+                document.getElementById('display-name').innerText = data.twitter;
+                document.getElementById('display-wallet').innerText = data.wallet;
+                document.getElementById('user-avatar').src = data.avatar;
+                
+                const statusText = data.status || "Whitelist (FCFS)";
+                document.getElementById('user-status').innerText = statusText;
+                document.getElementById('nav-status').innerText = statusText;
+
+                document.getElementById('status-message-box').classList.remove('hidden');
+                if(statusText === "GTD APPROVED") {
+                    document.getElementById('gtd-approved-content').classList.remove('hidden');
+                    document.getElementById('review-msg-content').classList.add('hidden');
+                } else {
+                    // For "APPLICATION UNDER REVIEW" or default FCFS, show the recorded message
+                    document.getElementById('review-msg-content').classList.remove('hidden');
+                    document.getElementById('gtd-approved-content').classList.add('hidden');
+                    document.getElementById('user-status').innerText = "Upcoming GTD (Recorded)";
+                    document.getElementById('nav-status').innerText = "Upcoming GTD (Recorded)";
+                }
             }
-        }
-
-        function renderUI(data) {
-            document.getElementById('page1').classList.add('hidden');
-            document.getElementById('page2').classList.remove('hidden');
-            document.getElementById('user-status-tag').classList.remove('hidden');
-            document.getElementById('edit-name').value = data.twitter;
-            document.getElementById('edit-wallet').value = data.wallet;
-            document.getElementById('user-avatar').src = data.avatar;
-            const statusText = data.status || "Whitelist (FCFS)";
-            document.getElementById('user-status').innerText = statusText;
-            document.getElementById('nav-status').innerText = statusText;
-
-            if(statusText === "GTD APPROVED") {
-                document.getElementById('upgrade-form').classList.add('hidden');
-                document.getElementById('review-status').classList.add('hidden');
-                document.getElementById('gtd-approved').classList.remove('hidden');
-            } else if(statusText === "APPLICATION UNDER REVIEW") {
-                document.getElementById('upgrade-form').classList.add('hidden');
-                document.getElementById('review-status').classList.remove('hidden');
-                document.getElementById('gtd-approved').classList.add('hidden');
-            }
-        }
-
-        async function submitUpgrade() {
-            const link = document.getElementById('upgrade-link').value;
-            if(!link) return alert("Link missing");
-            const btn = document.getElementById('upgrade-btn');
-            btn.innerText = "Sending...";
-            btn.disabled = true;
-            let data = JSON.parse(localStorage.getItem('mimo_crew_user'));
-            data.upgrade_link = link;
-            data.status = "APPLICATION UNDER REVIEW";
-            try {
-                await fetch(gtdScriptURL, { method: 'POST', body: JSON.stringify(data), mode: 'no-cors' });
-                localStorage.setItem('mimo_crew_user', JSON.stringify(data));
-                setTimeout(() => location.reload(), 1500);
-            } catch (e) {
-                localStorage.setItem('mimo_crew_user', JSON.stringify(data));
-                location.reload();
-            }
-        }
-
-        function saveEdit() {
-            let data = JSON.parse(localStorage.getItem('mimo_crew_user'));
-            data.twitter = document.getElementById('edit-name').value;
-            localStorage.setItem('mimo_crew_user', JSON.stringify(data));
-            alert("Profile updated locally!");
         }
 
         function initGallery() {
@@ -392,7 +259,7 @@
             nftData.forEach(item => {
                 grid.innerHTML += `
                     <div class="nft-container text-center">
-                        <img src="${item.src}" class="nft-card">
+                        <img src="${item.src}" class="nft-card border-2 border-white shadow-sm">
                         <div class="nft-number">#${item.num}</div>
                     </div>`;
             });
@@ -414,7 +281,7 @@
                 const now = new Date().getTime();
                 let currentTarget = null;
 
-                stages.forEach((stage, index) => {
+                stages.forEach((stage) => {
                     const el = document.getElementById(stage.id);
                     if (now > stage.time) {
                         el.classList.add('stage-passed');
